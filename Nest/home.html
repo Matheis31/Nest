@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo (2).png" type="image/png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+
+        header {
+            background-color: #FFA4FF;
+            padding: 20px 0;
+            font-family: 'Signika', sans-serif;
+            font-size: 60px;
+            color: #0d0d0d;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0px #FF79D1, 6px 6px 0px #FF60C0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header:before,
+        header:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #0d0d0d;
+            top: 50%;
+            left: 0;
+            animation: headerLines 2s infinite ease-in-out;
+        }
+
+        header:after {
+            top: auto;
+            bottom: 50%;
+        }
+
+        @keyframes headerLines {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .game-section {
+            margin: 50px auto;
+            max-width: 800px;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #FFA4FF;
+        }
+
+        .game-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #FFA4FF;
+            font-family: 'Signika', sans-serif;
+        }
+
+        .game-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .play-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-family: 'Signika', sans-serif;
+            color: #0d0d0d;
+            background-color: #FFA4FF;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 8px 15px rgba(255, 164, 255, 0.4);
+        }
+
+        .play-button:hover {
+            background-color: #FF79D1;
+            transform: translateY(-5px);
+        }
+
+        .play-button:active {
+            background-color: #FF60C0;
+            transform: translateY(2px);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #1a1a1a;
+            font-size: 14px;
+            color: #ffffff;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-section {
+            animation: fadeInUp 1s ease;
+        }
+
+        .footer nosotros {
+            text-decoration: none;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: inherit; /* Esto asegura que el color del enlace herede del padre si es necesario */
+        }
+        
+        .error {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .error::before {
+            content: '‼ ';
+            font-size: 18px;
+        }
+
+        .difficulty-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .difficulty-easy {
+            background-color: #00FF00; /* Verde para fácil */
+        }
+
+        .difficulty-normal {
+            background-color: #FFFF00; /* Amarillo para normal */
+        }
+
+        .difficulty-hard {
+            background-color: #FF0000; /* Rojo para difícil */
+        }
+
+        .difficulty-chat {
+            background-color: rgb(146, 204, 255);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        Juegos
+    </header>
+
+    <div class="game-section">
+        <h2>Dificultad En los Juegos</h2>
+        <p class="game-description">
+            En cada Juego Aparecera la Dificultad que sera asiganda con un punto verde si es facil, amarillo es normal y rojo si la dificultad es dificil, desafiate a ti mismo jugando nuestros Juegos.
+        </p>
+        <a href="nosotros.html" class="play-button">¿Te Interesa saber más de nosotros?</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-easy"></span>Astronauta</h2>
+        <p class="game-description">
+            Eres un Astronauta que debera recolectar monedas mientras evitas tocar los meteoros. ¡Desafíate a ti mismo y consigue la mayor cantidad de puntos antes de que sea demasiado tarde!
+        </p>
+        <a href="nest.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-normal"></span>Dino</h2>
+        <p class="game-description">
+            En Dino eres el dinosario de Google. ¡Salta en el momento justo y evita los obstáculos para sobrevivir el mayor tiempo posible!
+        </p>
+        <a href="run.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-easy"></span>Palabra Secreta</h2>
+        <p class="game-description">        
+            Palabra Secreta es un juego de adivinanza donde debes descubrir una palabra oculta. Escribe tu respuesta y obtén un porcentaje de similitud. Usa la pista si te atascas y acércate a la victoria.
+        </p>
+            <a href="adivina_la_palabra.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-chat"></span>Chat Ia</h2>
+        <p class="game-description">        
+            Un chat interactivo con IA donde eliges respuestas mediante botones. Disfruta de una breve conversación hasta que el chat termine y seas redirigido automáticamente. 
+        </p>
+        <p class="error">(El Chat no esta muy avanzado y puede que termine la conversación muy rapido)</p>
+        <br>
+            <a href="chat_ia.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-easy"></span>Tres En Raya</h2>
+        <p class="game-description">        
+            Juega al Tres en Raya contra una IA. Tu objetivo es alinear tres "X" antes de que la IA coloque tres "O". Disfruta del reto y utiliza el botón de "Salir" para regresar al inicio.
+        </p>
+            <a href="tres_en_raya.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-hard"></span>Super Tres En Raya</h2>
+        <p class="game-description">        
+            Juega al Tres en Raya contra una IA muy inteligente. Tu objetivo es alinear tres "X" antes de que la IA coloque tres "O". Disfruta del reto y utiliza el botón de "Salir" para regresar al inicio.
+        </p>
+            <a href="ter_dificil.html" class="play-button">Jugar</a>
+    </div>
+
+    <div class="game-section">
+        <h2><span class="difficulty-indicator difficulty-normal"></span>Piedra, Papel o Tijera</h2>
+        <p class="game-description">
+            El clásico juego de Piedra, Papel o Tijera donde puedes competir contra la IA. Elige tu opción y gana o pierde según la elección de tu oponente. ¡Diviértete y gana tantas rondas como puedas!
+        </p>
+        <a href="ppot.html" class="play-button">Jugar</a>
+    </div>
+
+    <footer>
+        &copy; 2024 - Todos los derechos reservados. Diseñado por Angel Matheis. | 
+        <a href="nosotros.html">Nosotros</a>
+    </footer>
+
+
+</body>
+</html>

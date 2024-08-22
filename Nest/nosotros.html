@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo (2).png" type="image/png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+
+        header {
+            background-color: #FFA4FF;
+            padding: 20px 0;
+            font-family: 'Signika', sans-serif;
+            font-size: 60px;
+            color: #0d0d0d;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0px #FF79D1, 6px 6px 0px #FF60C0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header:before,
+        header:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #0d0d0d;
+            top: 50%;
+            left: 0;
+            animation: headerLines 2s infinite ease-in-out;
+        }
+
+        header:after {
+            top: auto;
+            bottom: 50%;
+        }
+
+        @keyframes headerLines {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .about-section {
+            margin: 50px auto;
+            max-width: 800px;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #FFA4FF;
+            text-align: left;
+        }
+
+        .about-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #FFA4FF;
+            font-family: 'Signika', sans-serif;
+            text-align: center;
+        }
+
+        .about-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #fff;
+            justify-content: center;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #1a1a1a;
+            font-size: 14px;
+            color: #ffffff;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: inherit; /* Esto asegura que el color del enlace herede del padre si es necesario */
+        }
+
+        .button {
+            background: #FFA4FF;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            text-decoration: none; /* Elimina la línea subrayada del texto */
+            display: inline-block;
+        }
+
+        .button:hover {
+            background: #FF79D1;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            background: #FF60C0;
+            transform: scale(1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        Nosotros
+    </header>
+
+    <div class="about-section">
+        <h2>Sobre Mí</h2>
+        <p class="about-description">
+            ¡Hola! Soy el único desarrollador detrás de este proyecto. Aunque trabajo solo, pongo todo mi esfuerzo y pasión en crear juegos divertidos y entretenidos para que disfrutes.
+        </p>
+        <p class="about-description">
+            Como es un trabajo de una sola persona, es posible que algunos juegos no estén tan avanzados o pulidos como los de grandes compañías. Pero eso no me detiene, sigo mejorando y aprendiendo cada día para ofrecerte la mejor experiencia posible.
+        </p>
+        <p class="about-description">
+            Agradezco mucho tu apoyo y paciencia mientras continúo desarrollando y mejorando estos juegos. ¡Espero que disfrutes jugando tanto como yo disfruto creándolos!
+        </p>
+        <div class="button-container">
+            <a href="cargando.html" class="button">Salir</a>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2>¿Como Jugar?</h2>
+        <p class="about-description">
+            Juego de Astronauta: Usa las Flechas del teclado de tu laptop.
+            Juego del Dinosaurio: Usa la tecla de "espacio" de tu laptop para saltar
+            Juego de Palabra Secreta, Chat Ia, Tres En Raya y Piedra, Papel o Tijera: En estos juegos se juegan con botones, arrastra tu cursor a los botones correspondientes de cada juego.
+        </p>
+    </div>
+
+    <footer>
+        &copy; 2024 - Todos los derechos reservados. Diseñado por Angel Matheis.
+    </footer>
+
+
+
+    
+
+
+</body>
+
+</html>

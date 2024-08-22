@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Adivinar la Palabra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="palabra-clave.png" type="image/png">
+    <style>
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .guess-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .guess-input:focus {
+            border-color: #007BFF;
+        }
+
+        .feedback {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 20px;
+            min-height: 24px;
+            text-align: left;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guess-button, .give-up-button, .hint-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .guess-button:hover, .give-up-button:hover, .hint-button:hover {
+            transform: scale(1.05);
+        }
+
+        .guess-button:active, .give-up-button:active, .hint-button:active {
+            transform: scale(1);
+        }
+
+        .guess-button {
+            background-color: #007BFF;
+        }
+
+        .guess-button:hover {
+            background-color: #0056b3;
+        }
+
+        .give-up-button {
+            background-color: #e74c3c;
+        }
+
+        .give-up-button:hover {
+            background-color: #c0392b;
+        }
+
+        .hint-button {
+            background-color: #f1c40f;
+            color: #333;
+        }
+
+        .hint-button:hover {
+            background-color: #f39c12;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .feedback-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .feedback-list li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feedback-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-title">Adivina la Palabra</div>
+        <input type="text" class="guess-input" id="guessInput" placeholder="Ingresa tu suposición...">
+        <ul class="feedback-list" id="feedbackList"></ul>
+        <div class="button-container">
+            <button class="guess-button" id="guessButton">Enviar</button>
+            <button class="hint-button" id="hintButton">Pista</button>
+            <button class="give-up-button" id="giveUpButton">Rendirse</button>
+        </div>
+    </div>
+
+    <script>
+        const words = ["manzana", "banana", "naranja", "uva", "mango", "durazno", "cereza", "melón"];
+        const correctWord = words[Math.floor(Math.random() * words.length)];
+        const feedbackList = document.getElementById('feedbackList');
+        const guessInput = document.getElementById('guessInput');
+        const guessButton = document.getElementById('guessButton');
+        const hintButton = document.getElementById('hintButton');
+        const giveUpButton = document.getElementById('giveUpButton');
+
+        guessButton.addEventListener('click', checkGuess);
+        hintButton.addEventListener('click', giveHint);
+        guessInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkGuess();
+            }
+        });
+        giveUpButton.addEventListener('click', () => window.location.href = 'perdiste.html');
+
+        function calculateSimilarity(str1, str2) {
+            let matches = 0;
+            const length = Math.min(str1.length, str2.length);
+            for (let i = 0; i < length; i++) {
+                if (str1[i] === str2[i]) {
+                    matches++;
+                }
+            }
+            return Math.round((matches / correctWord.length) * 100);
+        }
+
+        function checkGuess() {
+    const userGuess = guessInput.value.toLowerCase();
+    if (userGuess === correctWord) {
+        feedbackList.innerHTML += `<li><strong>${userGuess}</strong> - ¡100% de similitud! ¡Adivinaste la palabra!</li>`;
+        feedbackList.style.color = "#2ecc71";
+        guessInput.disabled = true;
+        guessButton.disabled = true;
+        hintButton.disabled = true;
+        // Redirigir a la página de cargando.html después de adivinar correctamente
+        setTimeout(() => {
+            window.location.href = 'cargando.html';
+        }, 1000); // Espera un segundo antes de redirigir
+    } else {
+        const similarity = calculateSimilarity(userGuess, correctWord);
+        feedbackList.innerHTML += `<li><strong>${userGuess}</strong> - ${similarity}% de similitud</li>`;
+        feedbackList.scrollTop = feedbackList.scrollHeight;
+    }
+    guessInput.value = '';
+    guessInput.focus();
+}
+
+function giveHint() {
+    let similarWord = correctWord.split('').map((char, index) => {
+        return Math.random() < 0.5 ? char : words[Math.floor(Math.random() * words.length)][index];
+    }).join('');
+
+    // Asegurarse de que la palabra sugerida en la pista no sea igual a la palabra secreta
+    while (similarWord === correctWord) {
+        similarWord = correctWord.split('').map((char, index) => {
+            return Math.random() < 0.5 ? char : words[Math.floor(Math.random() * words.length)][index];
+        }).join('');
+    }
+
+    feedbackList.innerHTML += `<li><strong>Pista:</strong> ${similarWord} - (Pista)</li>`;
+    feedbackList.scrollTop = feedbackList.scrollHeight;
+}
+
+    </script>
+</body>
+</html>

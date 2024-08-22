@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astronauta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="casino.png" type="image/png">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            background: url('espacio.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            position: relative;
+        }
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            font-weight: 700; /* Fuente más destacada */
+            font-family: 'Quicksand', sans-serif;
+            color: #00BFFF; /* Azul brillante tipo espacio */
+            text-shadow: 3px 3px 0px #FF79D1, 6px 6px 0px #FF60C0;
+        }
+        #title {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 48px;
+            font-weight: 700; /* Fuente más destacada */
+            font-family: 'Quicksand', sans-serif;
+            color: #00BFFF; /* Azul brillante tipo espacio */
+            text-shadow: 3px 3px 0px #FF79D1, 6px 6px 0px #FF60C0;
+        }
+        #starfield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">Astronautat</div>
+    <div id="score">Puntuación: 0</div>
+    <canvas id="starfield"></canvas>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        // Canvas de los puntitos
+        const starfieldCanvas = document.getElementById('starfield');
+        const starfieldCtx = starfieldCanvas.getContext('2d');
+        const starCount = 100;
+        const stars = [];
+
+        // Configuración del canvas de los puntitos
+        starfieldCanvas.width = window.innerWidth;
+        starfieldCanvas.height = window.innerHeight;
+
+        function createStars() {
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * starfieldCanvas.width,
+                    y: Math.random() * starfieldCanvas.height,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function drawStars() {
+            starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
+            starfieldCtx.fillStyle = 'white';
+            stars.forEach(star => {
+                starfieldCtx.beginPath();
+                starfieldCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                starfieldCtx.fill();
+            });
+        }
+
+        function updateStars() {
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > starfieldCanvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * starfieldCanvas.width;
+                }
+            });
+        }
+
+        function animateStars() {
+            updateStars();
+            drawStars();
+            requestAnimationFrame(animateStars);
+        }
+
+        createStars();
+        animateStars();
+
+        // Canvas del juego
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const playerImg = new Image();
+        playerImg.src = 'cohete (2).png';
+
+        const obstacleImg = new Image();
+        obstacleImg.src = 'meteoro.png';
+
+        const pointImg = new Image();
+        pointImg.src = 'moneda.png';
+
+        let player = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height / 2 - 25, // Centramos el cohete verticalmente
+            width: 50,
+            height: 50,
+            dx: 0,
+            dy: 0
+        };
+
+        let obstacles = [];
+        let points = [];
+        let score = 0;
+        let gameOver = false;
+        let obstacleSpeed = 3;
+        let spawnRate = 0.01;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') player.dx = -5;
+            if (e.key === 'ArrowRight') player.dx = 5;
+            if (e.key === 'ArrowUp') player.dy = -5;
+            if (e.key === 'ArrowDown') player.dy = 5;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') player.dx = 0;
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') player.dy = 0;
+        });
+
+        function drawPlayer() {
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+        }
+
+        function drawObstacles() {
+            obstacles.forEach(obstacle => {
+                ctx.drawImage(obstacleImg, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function drawPoints() {
+            points.forEach(point => {
+                ctx.drawImage(pointImg, point.x, point.y, point.width, point.height);
+            });
+        }
+
+        function updateObstacles() {
+            obstacles.forEach(obstacle => {
+                obstacle.y += obstacleSpeed;
+
+                if (obstacle.y > canvas.height) {
+                    obstacles.splice(obstacles.indexOf(obstacle), 1);
+                }
+
+                if (obstacle.x < player.x + player.width &&
+                    obstacle.x + obstacle.width > player.x &&
+                    obstacle.y < player.y + player.height &&
+                    obstacle.height + obstacle.y > player.y) {
+                    gameOver = true;
+                }
+            });
+
+            points.forEach(point => {
+                point.y += obstacleSpeed;
+
+                if (point.y > canvas.height) {
+                    points.splice(points.indexOf(point), 1);
+                }
+
+                if (point.x < player.x + player.width &&
+                    point.x + point.width > player.x &&
+                    point.y < player.y + player.height &&
+                    point.height + point.y > player.y) {
+                    // Puntos aleatorios entre 1 y 100
+                    const pointValue = Math.floor(Math.random() * 100) + 1;
+                    score += pointValue;
+                    scoreElement.innerText = `Puntuación: ${score}`;
+                    points.splice(points.indexOf(point), 1);
+                }
+            });
+
+            if (Math.random() < spawnRate) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 50),
+                    y: 0,
+                    width: 50,
+                    height: 50
+                });
+            }
+
+            if (Math.random() < spawnRate / 2) {
+                points.push({
+                    x: Math.random() * (canvas.width - 30),
+                    y: 0,
+                    width: 30,
+                    height: 30
+                });
+            }
+        }
+
+        function updatePlayer() {
+            player.x += player.dx;
+            player.y += player.dy;
+
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+            if (player.y < 0) player.y = 0;
+            if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+        }
+
+        function increaseDifficulty() {
+            setTimeout(() => {
+                obstacleSpeed += 1;
+                spawnRate += 0.01;
+                increaseDifficulty();
+            }, 60000);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawObstacles();
+            drawPoints();
+            updateObstacles();
+            updatePlayer();
+
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            } else {
+                window.location.href = `perdiste.html?score=${score}`;
+            }
+        }
+
+        increaseDifficulty();
+        gameLoop();
+    </script>
+</body>
+</html>

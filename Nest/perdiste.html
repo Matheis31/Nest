@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perdiste</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('Celestial.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #FFA4FF;
+        }
+        h1 {
+            font-family: 'Signika', sans-serif;
+            font-size: 48px;
+            margin: 0 0 20px;
+            color: #FFA4FF;
+        }
+        p {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 24px;
+            font-family: 'Signika', sans-serif;
+            color: #fff;
+            background-color: #FFA4FF;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #FF79D1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="gameTitle">¡Perdiste!</h1>
+        <p>Tu puntuación final en <span id="gameName">el juego</span> fue: <span id="finalScore">0</span></p>
+        <p>¡Inténtalo de nuevo!</p>
+        <a href="home.html" class="button">Volver al Inicio</a>
+    </div>
+
+    <script>
+        // Obtén la puntuación final y el nombre del juego desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const score = urlParams.get('score');
+        const game = urlParams.get('game');
+
+        // Muestra la puntuación y ajusta el título y el nombre del juego
+        if (score) {
+            document.getElementById('finalScore').innerText = score;
+        }
+        if (game) {
+            document.getElementById('gameName').innerText = game;
+            document.getElementById('gameTitle').innerText = `¡Perdiste en ${game}!`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres en Raya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Signika', sans-serif;
+            color: #FFA4FF;
+            text-shadow: 3px 3px 0px #FF79D1, 6px 6px 0px #FF60C0;
+            margin-bottom: 20px;
+            font-size: 48px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: #FFA4FF;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 164, 255, 0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .cell:hover {
+            transform: scale(1.1);
+        }
+
+        .cell:active {
+            transform: scale(0.9);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #FFA4FF;
+            font-family: 'Signika', sans-serif;
+        }
+
+        #reset, #exit {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-family: 'Signika', sans-serif;
+            color: #0d0d0d;
+            background-color: #FFA4FF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(255, 164, 255, 0.4);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #reset:hover, #exit:hover {
+            background-color: #FF79D1;
+        }
+
+        #reset:active, #exit:active {
+            background-color: #FF60C0;
+            transform: translateY(2px);
+        }
+
+        #exit {
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <h1>Tres en Raya</h1>
+        <div id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <div id="message"></div>
+        <button id="reset">Reiniciar Juego</button>
+        <button id="exit">Salir</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        const message = document.getElementById('message');
+        const resetButton = document.getElementById('reset');
+        const exitButton = document.getElementById('exit');
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let gameState = ['', '', '', '', '', '', '', '', ''];
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        function handleCellClick(event) {
+            const clickedCell = event.target;
+            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+
+            if (gameState[clickedCellIndex] !== '' || !gameActive || currentPlayer !== 'X') {
+                return;
+            }
+
+            gameState[clickedCellIndex] = currentPlayer;
+            clickedCell.textContent = currentPlayer;
+
+            checkResult();
+            if (gameActive) {
+                currentPlayer = 'O';
+                setTimeout(aiMove, 500);
+            }
+        }
+
+        function aiMove() {
+            let availableCells = gameState.map((cell, index) => cell === '' ? index : null).filter(index => index !== null);
+            if (availableCells.length === 0 || !gameActive) return;
+
+            const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+            gameState[randomIndex] = 'O';
+            cells[randomIndex].textContent = 'O';
+
+            checkResult();
+            if (gameActive) {
+                currentPlayer = 'X';
+            }
+        }
+
+        function checkResult() {
+            let roundWon = false;
+
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                message.textContent = `¡El jugador ${currentPlayer} ha ganado!`;
+                gameActive = false;
+                return;
+            }
+
+            if (!gameState.includes('')) {
+                message.textContent = '¡Es un empate!';
+                gameActive = false;
+                return;
+            }
+        }
+
+        function resetGame() {
+            currentPlayer = 'X';
+            gameActive = true;
+            gameState = ['', '', '', '', '', '', '', '', ''];
+            message.textContent = '';
+            cells.forEach(cell => cell.textContent = '');
+        }
+
+        function exitGame() {
+            window.location.href = "cargando.html";
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        resetButton.addEventListener('click', resetGame);
+        exitButton.addEventListener('click', exitGame);
+
+    </script>
+
+</body>
+
+</html>

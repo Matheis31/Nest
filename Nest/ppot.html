@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijera</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="piedra-papel-tijeras.png" type="image/png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .game-container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #FFA4FF;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 36px;
+            margin: 20px 0;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .choice {
+            background: #555;
+            border-radius: 10px;
+            padding: 20px;
+            width: 120px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .choice:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 164, 255, 0.7);
+        }
+
+        .choice img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .result {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        .button {
+            background: #FFA4FF;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            text-decoration: none; /* Elimina la línea subrayada del texto */
+        }
+
+        .button:hover {
+            background: #FF79D1;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            background: #FF60C0;
+            transform: scale(1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container .button {
+            margin: 0 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .game-container {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Piedra, Papel o Tijera</h1>
+        <div class="score">Puntos: <span id="score">0</span></div>
+        <div class="choices">
+            <div class="choice" id="rock">
+                <img src="piedra.png" alt="Piedra">
+                <p>Piedra</p>
+            </div>
+            <div class="choice" id="paper">
+                <img src="papel.png" alt="Papel">
+                <p>Papel</p>
+            </div>
+            <div class="choice" id="scissors">
+                <img src="tijera.png" alt="Tijeras">
+                <p>Tijeras</p>
+            </div>
+        </div>
+        <div class="result" id="result">Elige una opción para comenzar.</div>
+        <div class="button-container">
+            <button class="button" id="resetButton">Jugar de nuevo</button>
+            <a href="cargando.html" class="button" id="exitButton">Salir</a>
+        </div>
+    </div>
+
+    <script>
+        const choices = document.querySelectorAll('.choice');
+        const resultDisplay = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score');
+        const resetButton = document.getElementById('resetButton');
+
+        let userChoice;
+        let computerChoice;
+        let score = 0;
+
+        choices.forEach(choice => {
+            choice.addEventListener('click', () => {
+                userChoice = choice.id;
+                playGame();
+            });
+        });
+
+        resetButton.addEventListener('click', () => {
+            resultDisplay.textContent = 'Elige una opción para comenzar.';
+        });
+
+        function playGame() {
+            computerChoice = getComputerChoice();
+            const winner = getWinner(userChoice, computerChoice);
+            resultDisplay.textContent = `Elegiste ${translateChoice(userChoice)}. La IA eligió ${translateChoice(computerChoice)}. ${winner}`;
+            if (winner === '¡Ganaste!') {
+                score += 10;
+                scoreDisplay.textContent = score;
+            }
+        }
+
+        function getComputerChoice() {
+            const choices = ['rock', 'paper', 'scissors'];
+            const randomChoice = choices[Math.floor(Math.random() * choices.length)];
+            return randomChoice;
+        }
+
+        function getWinner(user, computer) {
+            if (user === computer) {
+                return '¡Es un empate!';
+            } else if (
+                (user === 'rock' && computer === 'scissors') ||
+                (user === 'paper' && computer === 'rock') ||
+                (user === 'scissors' && computer === 'paper')
+            ) {
+                return '¡Ganaste!';
+            } else {
+                return 'Perdiste.';
+            }
+        }
+
+        function translateChoice(choice) {
+            switch (choice) {
+                case 'rock':
+                    return 'Piedra';
+                case 'paper':
+                    return 'Papel';
+                case 'scissors':
+                    return 'Tijeras';
+                default:
+                    return '';
+            }
+        }
+    </script>
+</body>
+</html>

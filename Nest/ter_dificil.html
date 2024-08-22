@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres en Raya - Difícil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #3a3a3a, #0d0d0d); /* Degradado de fondo más oscuro */
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Signika', sans-serif;
+            color: #ffffff; /* Color rojo para el título */
+            text-shadow: 3px 3px 0px #FF4444, 6px 6px 0px #FF0000; /* Sombra del texto en rojo */
+            margin-bottom: 20px;
+            font-size: 48px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 0 auto; /* Centra la cuadrícula horizontalmente */
+            justify-content: center; /* Centra la cuadrícula verticalmente */
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: #FFFFFF; /* Color blanco para las letras */
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); /* Sombra de la celda en rojo */
+            transition: transform 0.3s ease;
+        }
+
+        .cell:hover {
+            transform: scale(1.1);
+        }
+
+        .cell:active {
+            transform: scale(0.9);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #FFFFFF; /* Color blanco para el mensaje */
+            font-family: 'Signika', sans-serif;
+        }
+
+        #reset, #exit {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-family: 'Signika', sans-serif;
+            color: #FFFFFF; /* Color blanco para el texto de los botones */
+            background-color: #FF0000; /* Color rojo para los botones */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(255, 0, 0, 0.4);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #reset:hover, #exit:hover {
+            background-color: #FF4444;
+        }
+
+        #reset:active, #exit:active {
+            background-color: #FF0000;
+            transform: translateY(2px);
+        }
+
+        #exit {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <h1>Super Tres en Raya</h1>
+        <div id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <div id="message"></div>
+        <button id="reset">Reiniciar Juego</button>
+        <button id="exit">Salir</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        const message = document.getElementById('message');
+        const resetButton = document.getElementById('reset');
+        const exitButton = document.getElementById('exit');
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let gameState = ['', '', '', '', '', '', '', '', ''];
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        function handleCellClick(event) {
+            const clickedCell = event.target;
+            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+
+            if (gameState[clickedCellIndex] !== '' || !gameActive || currentPlayer !== 'X') {
+                return;
+            }
+
+            gameState[clickedCellIndex] = currentPlayer;
+            clickedCell.textContent = currentPlayer;
+
+            checkResult();
+            if (gameActive) {
+                currentPlayer = 'O';
+                setTimeout(aiMove, 500);
+            }
+        }
+
+        function aiMove() {
+            let bestScore = -Infinity;
+            let move;
+            
+            for (let i = 0; i < gameState.length; i++) {
+                if (gameState[i] === '') {
+                    gameState[i] = 'O';
+                    let score = minimax(gameState, 0, false);
+                    gameState[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+
+            gameState[move] = 'O';
+            cells[move].textContent = 'O';
+            checkResult();
+            if (gameActive) {
+                currentPlayer = 'X';
+            }
+        }
+
+        const scores = {
+            'X': -10,
+            'O': 10,
+            'tie': 0
+        };
+
+        function minimax(state, depth, isMaximizing) {
+            let result = checkWinner();
+            if (result !== null) {
+                return scores[result];
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < state.length; i++) {
+                    if (state[i] === '') {
+                        state[i] = 'O';
+                        let score = minimax(state, depth + 1, false);
+                        state[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < state.length; i++) {
+                    if (state[i] === '') {
+                        state[i] = 'X';
+                        let score = minimax(state, depth + 1, true);
+                        state[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        function checkWinner() {
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+                    return gameState[a];
+                }
+            }
+
+            if (!gameState.includes('')) {
+                return 'tie';
+            }
+
+            return null;
+        }
+
+        function checkResult() {
+            let winner = checkWinner();
+
+            if (winner !== null) {
+                if (winner === 'tie') {
+                    message.textContent = '¡Es un empate!';
+                } else {
+                    message.textContent = `¡El jugador ${winner} ha ganado!`;
+                }
+                gameActive = false;
+            }
+        }
+
+        function resetGame() {
+            currentPlayer = 'X';
+            gameActive = true;
+            gameState = ['', '', '', '', '', '', '', '', ''];
+            message.textContent = '';
+            cells.forEach(cell => cell.textContent = '');
+        }
+
+        function exitGame() {
+            window.location.href = "cargando.html";
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        resetButton.addEventListener('click', resetGame);
+        exitButton.addEventListener('click', exitGame);
+
+    </script>
+
+</body>
+
+</html>
